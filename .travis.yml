@@ -21,6 +21,7 @@ env:
     - BRANCH="${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}"
 
 before_install:
+  - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.33.0
   - echo "current branch is ${BRANCH}"
   - if [ "${BRANCH}" == "master" ]; then travis_terminate 0; fi
   - ls ${BRANCH} && cd ${BRANCH}
@@ -40,7 +41,6 @@ jobs:
 
     - stage: "Tests"
       name: "Linters"
-      install: go install github.com/golangci/golangci-lint/cmd/golangci-lint
       script: golangci-lint run ./...
       if: |
         (type = push AND branch != hw12_13_14_15_calendar) OR \
